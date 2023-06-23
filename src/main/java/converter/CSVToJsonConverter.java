@@ -100,6 +100,7 @@ public class CSVToJsonConverter {
             }
         }
         sb.append("]");
+//        check in console
         System.out.println(sb.toString());
         return sb.toString();
     }
