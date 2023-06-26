@@ -3,11 +3,9 @@ package converter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.csvreader.restapiclient.Post;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,7 +23,7 @@ import com.google.gson.GsonBuilder;
 public class CSVToJsonConverter {
 
     public static void main(String[] args) {
-        String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\TAS\\Data-7\\"; // Ubah dengan path folder tempat file CSV berada
+        String csvFolderPath = "D:\\Downloads\\Compressed\\Data-7\\Data-7\\"; // Ubah dengan path folder tempat file CSV berada
 
         List<List<Map<String, String>>> jsonDataList = new ArrayList<>();
         List<String> csvFiles = listCsvFiles(csvFolderPath);
@@ -35,6 +33,21 @@ public class CSVToJsonConverter {
             List<String[]> csvData = readCsvFile(csvFilePath);
             List<Map<String, String>> jsonData = convertToJSON(csvData);
             jsonDataList.add(jsonData);
+//            break;
+        }
+
+
+
+        String endPoint = "http://localhost:8080/api/cassandra";
+
+        Post post = new Post();
+
+
+
+        for (List<Map<String, String>> x : jsonDataList) {
+            System.out.println(x);
+            String body = generateJsonData(Collections.singletonList(x));
+            post.Post(endPoint, body);
         }
 
         generateJsonData(jsonDataList);
@@ -109,7 +122,7 @@ public class CSVToJsonConverter {
             sb.append("]");
             separator = ", ";
         }
-        System.out.println(sb.toString());
+//        System.out.println(sb);
         return sb.toString();
     }
 }
