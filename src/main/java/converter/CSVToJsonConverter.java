@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.csvreader.restapiclient.Post;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,11 +23,27 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 public class CSVToJsonConverter {
 
     public static void main(String[] args) {
-        String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\TAS\\Data-7\\"; // Ubah dengan path folder tempat file CSV berada
-
+        String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\TAS\\Data-7\\";
         List<List<Map<String, String>>> jsonDataList = new ArrayList<>();
         List<String> csvFiles = listCsvFiles(csvFolderPath);
 
@@ -37,7 +54,12 @@ public class CSVToJsonConverter {
             jsonDataList.add(jsonData);
         }
 
-        generateJsonData(jsonDataList);
+        String body = generateJsonData(jsonDataList);
+
+        String endPoint = "http://localhost:8080/api/cassandra";
+        String csvNotes = "File CSV yang dibaca: " + csvFiles.toString();
+
+        postJsonData(endPoint, body, csvFiles.toString());
     }
 
     private static List<String> listCsvFiles(String csvFolderPath) {
@@ -112,7 +134,45 @@ public class CSVToJsonConverter {
         System.out.println(sb.toString());
         return sb.toString();
     }
+
+    private static void postJsonData(String endPoint, String body, String csvNotes) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpPost request = new HttpPost(endPoint);
+
+            // Set JSON body
+            StringEntity entity = new StringEntity(body, ContentType.APPLICATION_JSON);
+            request.setEntity(entity);
+
+            // Set custom header for CSV notes
+            request.setHeader("DESCRIPTION", csvNotes);
+
+            // Execute the request
+            CloseableHttpResponse response = httpClient.execute(request);
+
+            // Process the response
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == 200) {
+                System.out.println("Data sent successfully to the REST API.");
+            } else {
+                System.out.println("Failed to send data to the REST API. Status code: " + statusCode);
+            }
+
+            // Close the response
+            response.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Close the HttpClient
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
+
 
 
 
