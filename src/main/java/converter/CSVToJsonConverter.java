@@ -5,20 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-import com.csvreader.restapiclient.Post;
+import com.csvreader.restapiclient.RestApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class CSVToJsonConverter {
 
@@ -37,17 +31,18 @@ public class CSVToJsonConverter {
         }
 
 
+        String header = "coba";
 
         String endPoint = "http://localhost:8080/api/cassandra";
 
-        Post post = new Post();
+        RestApiClient restApiClient = new RestApiClient();
 
 
 
         for (List<Map<String, String>> x : jsonDataList) {
             System.out.println(x);
             String body = generateJsonData(Collections.singletonList(x));
-            post.Post(endPoint, body);
+            restApiClient.Post(endPoint, header, body);
         }
 
         generateJsonData(jsonDataList);

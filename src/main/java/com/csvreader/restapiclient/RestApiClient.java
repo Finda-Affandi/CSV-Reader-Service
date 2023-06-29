@@ -4,14 +4,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Post {
-    public void Post(String apiUrl, String body) {
+public class RestApiClient {
+    public void Post(String apiUrl, String header, String body) {
         try{
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "Application/json");
+            conn.setRequestProperty("table-name", header);
 
             OutputStream outputStream = conn.getOutputStream();
             outputStream.write(body.getBytes());

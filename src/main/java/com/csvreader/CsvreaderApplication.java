@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.csvreader.restapiclient.Post;
+import com.csvreader.restapiclient.RestApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,13 +19,15 @@ public class CsvreaderApplication {
 
 		List<List<Map<String, String>>> jsonDataList = processCsvFiles(csvFolderPath);
 
+		String header = "fandi_cb";
+
 		String body = generateJsonData(jsonDataList);
 
-		String endPoint = "http://localhost:8080/api/cassandra";
+		String endPoint = "http://localhost:8080/api/postgres";
 
-		Post post = new Post();
+		RestApiClient restApiClient = new RestApiClient();
 
-		post.Post(endPoint, body);
+		restApiClient.Post(endPoint, header, body);
 	}
 
 	public static List<List<Map<String, String>>> processCsvFiles(String csvFolderPath) {
