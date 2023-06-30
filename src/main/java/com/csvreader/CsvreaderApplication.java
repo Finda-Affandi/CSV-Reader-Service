@@ -100,6 +100,7 @@ public class CsvreaderApplication {
 					String value = entry.getValue();
 					if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
 						value = value.substring(1, value.length() - 1);
+						value = value.replace(" ", "");
 					}
 					modifiedData.put(key, value);
 				}
