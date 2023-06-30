@@ -20,12 +20,8 @@ public class RestApiClient {
 
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Request was successful
-                // Handle the API response here if needed
                 System.out.println("JSON data posted successfully!");
             } else {
-                // Request failed
-                // Handle the error response here if needed
                 System.out.println("Failed to post JSON data. Response Code: " + responseCode);
             }
 
