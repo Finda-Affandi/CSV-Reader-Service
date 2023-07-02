@@ -33,6 +33,23 @@ public class CSVToJsonConverter {
 //        }
 //    }
 
+        public static void Post() {
+            String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\DATA\\Data-7\\";
+        List<String> csvFiles = listCsvFiles(csvFolderPath);
+
+        String endPoint = "http://localhost:8080/api/postgres";
+        RestApiClient restApiClient = new RestApiClient();
+
+        for (String csvFile : csvFiles) {
+            String csvFilePath = csvFolderPath + csvFile;
+            List<String[]> csvData = readCsvFile(csvFilePath);
+            List<Map<String, String>> jsonData = convertToJSON(csvData);
+            String body = generateJsonData(Collections.singletonList(jsonData));
+            String header = getLimitedTitle(csvFile);
+            restApiClient.Post(endPoint, header, body);
+        }
+    }
+
     private static List<String> listCsvFiles(String csvFolderPath) {
         List<String> csvFiles = new ArrayList<>();
         try {

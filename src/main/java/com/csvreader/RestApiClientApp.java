@@ -1,5 +1,8 @@
 package com.csvreader;
 
+import com.csvreader.restapiclient.RestApiClient;
+import converter.CSVToJsonConverter;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -16,13 +19,38 @@ public class RestApiClientApp {
 
 			switch (option) {
 				case 1:
-					System.out.println("1");
+					RestApiClient getAllPostgres = new RestApiClient();
+					String result1 = getAllPostgres.GetAll("http://localhost:8080/api/getAllDataPostgres");
+					// Lakukan sesuatu dengan hasil yang diterima, misalnya:
+					System.out.println(result1);
 					break;
 				case 2:
-					System.out.println("2");
+					RestApiClient chooseTable = new RestApiClient();
+					String result2 = chooseTable.ChooseTable("http://localhost:8080/api/chooseTablePosgres").toString();
+					System.out.println(result2);
+
+					Scanner choose  = new Scanner(System.in);
+					System.out.print("Pilih Table : ");
+					int pilihan = choose.nextInt();
+					RestApiClient getByTablePostgres = new RestApiClient();
+					String result2a;
+					String apiUrlByTable = "http://localhost:8080/api/getByTablePostgres";
+					switch (pilihan) {
+						case 1:
+							result2a = getByTablePostgres.GetByTable(apiUrlByTable, "1");
+							System.out.println(result2a);
+							break;
+						case 2:
+							result2a = getByTablePostgres.GetByTable(apiUrlByTable, "2");
+							System.out.println(result2a);
+							break;
+
+					}
+
 					break;
 				case 3:
-					System.out.println("3");
+					CSVToJsonConverter objek = new CSVToJsonConverter();
+					objek.Post();
 					break;
 				case 4:
 					System.out.println("4");
