@@ -1,7 +1,7 @@
 package com.csvreader;
 
 import com.csvreader.restapiclient.RestApiClient;
-import converter.CSVToJsonConverter;
+import com.csvreader.converter.CSVToJsonConverter;
 
 import java.io.IOException;
 import java.util.Scanner;

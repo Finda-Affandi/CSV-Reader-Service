@@ -1,4 +1,4 @@
-package converter;
+package com.csvreader.converter;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -50,7 +50,7 @@ public class CSVToJsonConverter {
         }
     }
 
-    private static List<String> listCsvFiles(String csvFolderPath) {
+    public static List<String> listCsvFiles(String csvFolderPath) {
         List<String> csvFiles = new ArrayList<>();
         try {
             java.io.File folder = new java.io.File(csvFolderPath);
