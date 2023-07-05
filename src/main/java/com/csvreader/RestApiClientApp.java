@@ -1,5 +1,6 @@
 package com.csvreader;
 
+import com.csvreader.mapper.PostMapping;
 import com.csvreader.restapiclient.RestApiClient;
 import com.csvreader.converter.CSVToJsonConverter;
 
@@ -9,6 +10,8 @@ import java.util.Scanner;
 public class RestApiClientApp {
 
 	public static void main(String[] args) throws IOException {
+		PostMapping postMapping = new PostMapping();
+		postMapping.CreateTable();
 		boolean exit = false;
 
 		while (!exit) {
