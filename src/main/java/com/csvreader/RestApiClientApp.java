@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class RestApiClientApp {
 
-public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		PostMapping postMapping = new PostMapping();
 		postMapping.CreateTable();
 		boolean exit = false;
@@ -23,12 +23,17 @@ public static void main(String[] args) throws IOException {
 			switch (option) {
 				case 1:
 					RestApiClient getAllPostgres = new RestApiClient();
+					RestApiClient getAllCassandra = new RestApiClient();
 					String result1 = getAllPostgres.GetAll("http://localhost:8080/api/postgres");
 					// Lakukan sesuatu dengan hasil yang diterima, misalnya:
+
+					String result2 = getAllCassandra.GetAll("http://localhost:8081/api/cassandra");
+					// Lakukan sesuatu dengan hasil yang diterima, misalnya:
 					System.out.println(result1);
+					System.out.println(result2);
 					break;
 				case 2:
-                                        CSVToJsonConverter objek = new CSVToJsonConverter();
+					CSVToJsonConverter objek = new CSVToJsonConverter();
 					objek.Post();
 //					RestApiClient chooseTable = new RestApiClient();
 //					String result2 = chooseTable.ChooseTable("http://localhost:8080/api/chooseTablePosgres").toString();
@@ -54,7 +59,7 @@ public static void main(String[] args) throws IOException {
 
 					break;
 				case 3:
-                                        exit = true;
+					exit = true;
 					break;
 				default:
 					System.out.println("\n\n");

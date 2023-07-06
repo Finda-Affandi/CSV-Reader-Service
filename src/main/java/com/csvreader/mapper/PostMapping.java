@@ -11,7 +11,8 @@ public class PostMapping {
         MapReader mapReader = new MapReader();
         FilenameReader filenameReader = new FilenameReader();
         RestApiClient restApiClient = new RestApiClient();
-        String endpoint = "http://localhost:8080/api/postgres/create-table";
+        String endpointPostgres = "http://localhost:8080/api/postgres/create-table";
+        String endpointCassandra = "http://localhost:8081/api/cassandra/create-table";
 
         String path = "src/main/resources/Mapping";
         List<String> fileNames = filenameReader.fileNames(path);
@@ -21,7 +22,8 @@ public class PostMapping {
             Gson gson = new Gson();
             String json = gson.toJson(mapping);
             String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
-            restApiClient.Post(endpoint, filenameWithoutExtension, json.toString());
+            restApiClient.Post(endpointPostgres, filenameWithoutExtension, json.toString());
+            restApiClient.Post(endpointCassandra, filenameWithoutExtension, json.toString());
         }
 
     }
