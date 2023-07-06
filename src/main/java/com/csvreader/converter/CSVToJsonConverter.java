@@ -52,7 +52,7 @@ public class CSVToJsonConverter {
 //    }
 
     public static void Post() {
-        String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\DATA\\Data-7\\";
+        String csvFolderPath = "D:\\Downloads\\Compressed\\Data-7\\Data-7\\";
         List<String> csvFiles = listCsvFiles(csvFolderPath);
 
         String postgreSQLUrl = "http://localhost:8080/api/postgres";
