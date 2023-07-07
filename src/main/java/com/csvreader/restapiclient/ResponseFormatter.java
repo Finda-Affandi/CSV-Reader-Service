@@ -9,7 +9,6 @@ public class ResponseFormatter {
         String row = response.get("row").toString();
 
         String result = "Table = " + table + "\t\t" +  "Total Row = " + row + "\t\t" + "Duration = " + duration + "ms";
-
         return result;
     }
 }

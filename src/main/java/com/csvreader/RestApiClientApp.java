@@ -16,6 +16,7 @@ public class RestApiClientApp {
 
 		while (!exit) {
 			System.out.println("Waktu terbaru akses database:");
+			//total waktu
 			menu();
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("Input : ");
@@ -34,28 +35,6 @@ public class RestApiClientApp {
 				case 2:
 					CSVToJsonConverter objek = new CSVToJsonConverter();
 					objek.Post();
-//					RestApiClient chooseTable = new RestApiClient();
-//					String result2 = chooseTable.ChooseTable("http://localhost:8080/api/chooseTablePosgres").toString();
-//					System.out.println(result2);
-//
-//					Scanner choose  = new Scanner(System.in);
-//					System.out.print("Pilih Table : ");
-//					int pilihan = choose.nextInt();
-//					RestApiClient getByTablePostgres = new RestApiClient();
-//					String result2a;
-//					String apiUrlByTable = "http://localhost:8080/api/getByTablePostgres";
-//					switch (pilihan) {
-//						case 1:
-//							result2a = getByTablePostgres.GetByTable(apiUrlByTable, "1");
-//							System.out.println(result2a);
-//							break;
-//						case 2:
-//							result2a = getByTablePostgres.GetByTable(apiUrlByTable, "2");
-//							System.out.println(result2a);
-//							break;
-//
-//					}
-
 					break;
 				case 3:
 					exit = true;
@@ -73,7 +52,8 @@ public class RestApiClientApp {
 				Main Menu:
 				1. Get All Data
 				2. Post All Data 
-				3. Exit
+				3. Delete Data
+				4. Exit
 				\s""");
 	}
 

@@ -15,42 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVToJsonConverter {
-
-//    public static void main(String[] args) {
-//        String csvFolderPath = "D:\\Downloads\\Compressed\\Data-7\\Data-7\\"; // Ubah dengan path folder tempat file CSV berada
-//        List<String> csvFiles = listCsvFiles(csvFolderPath);
-//
-//        String endPoint = "http://localhost:8080/api/postgres";
-//        RestApiClient restApiClient = new RestApiClient();
-//
-//        for (String csvFile : csvFiles) {
-//            String csvFilePath = csvFolderPath + csvFile;
-//            List<String[]> csvData = readCsvFile(csvFilePath);
-//            List<Map<String, String>> jsonData = convertToJSON(csvData);
-//            String body = generateJsonData(Collections.singletonList(jsonData));
-//            String header = getLimitedTitle(csvFile);
-//            restApiClient.Post(endPoint, header, body);
-//        }
-//    }
-
-//        public static void Post() {
-//            String csvFolderPath = "D:\\Files\\MATKUL\\SEM9\\Pengujian Sistem\\TUGAS_AKHIR\\Data-7\\";
-//            List<String> csvFiles = listCsvFiles(csvFolderPath);
-//
-//            String endPoint = "http://localhost:8080/api/postgres";
-//           // String endPoint = "http://localhost:8080/api/cassandra";
-//            RestApiClient restApiClient = new RestApiClient();
-//
-//            for (String csvFile : csvFiles) {
-//                String csvFilePath = csvFolderPath + csvFile;
-//                List<String[]> csvData = readCsvFile(csvFilePath);
-//                List<Map<String, String>> jsonData = convertToJSON(csvData);
-//                String body = generateJsonData(Collections.singletonList(jsonData));
-//                String header = getLimitedTitle(csvFile);
-//                restApiClient.Post(endPoint, header, body);
-//            }
-//    }
-
     public static void Post() {
         String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\DATA\\Data-7\\";
         List<String> csvFiles = listCsvFiles(csvFolderPath);
@@ -79,7 +43,6 @@ public class CSVToJsonConverter {
             }
         }
     }
-
 
     public static List<String> listCsvFiles(String csvFolderPath) {
         List<String> csvFiles = new ArrayList<>();
