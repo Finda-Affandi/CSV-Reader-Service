@@ -6,6 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -38,14 +42,25 @@ public class RestApiClient {
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 if (apiUrl.contains("cassandra")) {
-                    System.out.print("Success! (Cassasndra) ");
+                    System.out.print("Success! Database = Cassandra\t\t");
+                    InputStream inputStream = conn.getInputStream();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Map<String, Object> response = objectMapper.readValue(inputStream, new TypeReference<Map<String, Object>>() {});
+                    ResponseFormatter responseFormatter = new ResponseFormatter();
+                    String result = responseFormatter.Formatter(response);
+                    System.out.println(result + "\n");
+
                 }else {
-                    System.out.print("Success! (Postgre) ");
+                    System.out.print("Success! Database = Postgre\t\t");
+                    InputStream inputStream = conn.getInputStream();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Map<String, Object> response = objectMapper.readValue(inputStream, new TypeReference<Map<String, Object>>() {});
+                    ResponseFormatter responseFormatter = new ResponseFormatter();
+                    String result = responseFormatter.Formatter(response);
+                    System.out.println(result);
                 }
 
-                InputStream inputStream = conn.getInputStream();
-                String response = convertStreamToString(inputStream);
-                System.out.print(response);
+
             } else {
                 System.out.println("Failed to post JSON data. Response Code: " + responseCode);
             }
