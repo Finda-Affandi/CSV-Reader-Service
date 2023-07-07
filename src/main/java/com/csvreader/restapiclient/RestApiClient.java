@@ -82,7 +82,7 @@ public class RestApiClient {
             e.printStackTrace();
         }
         return null;
-    }2
+    }
 
     public String GetByTable(String apiUrl, String param) {
         try {
