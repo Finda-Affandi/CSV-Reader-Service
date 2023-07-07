@@ -1,9 +1,6 @@
 package com.csvreader.restapiclient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +11,17 @@ import org.json.JSONException;
 
 
 public class RestApiClient {
+
+    private String convertStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        reader.close();
+        return stringBuilder.toString();
+    }
     public void Post(String apiUrl, String header, String body) {
         try{
             URL url = new URL(apiUrl);
@@ -27,8 +35,17 @@ public class RestApiClient {
             outputStream.flush();
 
             int responseCode = conn.getResponseCode();
+
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println("JSON data posted successfully!");
+                if (apiUrl.contains("cassandra")) {
+                    System.out.print("Success! (Cassasndra) ");
+                }else {
+                    System.out.print("Success! (Postgre) ");
+                }
+
+                InputStream inputStream = conn.getInputStream();
+                String response = convertStreamToString(inputStream);
+                System.out.print(response);
             } else {
                 System.out.println("Failed to post JSON data. Response Code: " + responseCode);
             }
@@ -65,7 +82,7 @@ public class RestApiClient {
             e.printStackTrace();
         }
         return null;
-    }
+    }2
 
     public String GetByTable(String apiUrl, String param) {
         try {

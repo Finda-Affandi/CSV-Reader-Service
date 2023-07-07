@@ -15,6 +15,7 @@ public class RestApiClientApp {
 		boolean exit = false;
 
 		while (!exit) {
+			System.out.println("Waktu terbaru akses database:");
 			menu();
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("Input : ");
@@ -25,10 +26,8 @@ public class RestApiClientApp {
 					RestApiClient getAllPostgres = new RestApiClient();
 					RestApiClient getAllCassandra = new RestApiClient();
 					String result1 = getAllPostgres.GetAll("http://localhost:8080/api/postgres");
-					// Lakukan sesuatu dengan hasil yang diterima, misalnya:
 
 					String result2 = getAllCassandra.GetAll("http://localhost:8081/api/cassandra");
-					// Lakukan sesuatu dengan hasil yang diterima, misalnya:
 					System.out.println(result1);
 					System.out.println(result2);
 					break;
@@ -76,8 +75,6 @@ public class RestApiClientApp {
 				2. Post All Data 
 				3. Exit
 				\s""");
-
-
 	}
 
 }
