@@ -1,6 +1,6 @@
 package com.csvreader;
 
-import com.csvreader.converter.StringConverter;
+
 import com.csvreader.mapper.FilenameReader;
 import com.csvreader.mapper.PostMapping;
 import com.csvreader.restapiclient.RestApiClient;
@@ -27,17 +27,17 @@ public class RestApiClientApp {
 			System.out.print("Input : ");
 			int option = scanner.nextInt();
 
+			RestApiClient rest = new RestApiClient();
+			FilenameReader filenameReader = new FilenameReader();
+			String path = "src/main/resources/Mapping";
+			List<String> fileNames = filenameReader.fileNames(path);
+
 			switch (option) {
 				case 1:
-					RestApiClient getAll = new RestApiClient();
-					FilenameReader filenameReader = new FilenameReader();
-					String path = "src/main/resources/Mapping";
-					List<String> fileNames = filenameReader.fileNames(path);
-
 					for (String filename : fileNames) {
 						String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
-						Map<String, Object> postgresResult = getAll.GetAll("http://localhost:8080/api/postgres", filenameWithoutExtension);
-						Map<String, Object> cassandraResult = getAll.GetAll("http://localhost:8081/api/cassandra", filenameWithoutExtension);
+						Map<String, Object> postgresResult = rest.GetAll("http://localhost:8080/api/postgres", filenameWithoutExtension);
+						Map<String, Object> cassandraResult = rest.GetAll("http://localhost:8081/api/cassandra", filenameWithoutExtension);
 
 						List<Map<String,Object>> postgresData = (List<Map<String, Object>>) postgresResult.get("data");
 //						Map<String, Object> cassandraData = (Map<String, Object>) cassandraResult.get("data");
@@ -72,6 +72,13 @@ public class RestApiClientApp {
 					objek.Post();
 					break;
 				case 3:
+					for (String filename : fileNames) {
+						String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
+						rest.TruncateTable("http://localhost:8080/api/postgres/truncate", filenameWithoutExtension);
+						rest.TruncateTable("http://localhost:8081/api/cassandra/truncate", filenameWithoutExtension);
+					}
+					break;
+				case 4:
 					exit = true;
 					break;
 				default:

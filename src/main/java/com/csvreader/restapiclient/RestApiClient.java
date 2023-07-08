@@ -92,5 +92,32 @@ public class RestApiClient {
         return null;
     }
 
+    public Map<String, Object> TruncateTable(String apiUrl, String header) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Content-Type", "Application/json");
+            conn.setRequestProperty("table-name", header);
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                if (apiUrl.contains("cassandra")) {
+                    System.out.print("Success Delete Data! (Cassandra)\n");
+
+                }else {
+                    System.out.print("Success Delete Data! (Postgre)\n");
+                }
+            } else {
+                System.out.println("Failed to get data. Response Code: " + responseCode);
+            }
+
+            conn.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }
