@@ -44,7 +44,6 @@ public class RestApiClientApp {
 
 						List <String> posColumn = new ArrayList<>();
 
-//
 						for (Map<String, Object> data : postgresData) {
 							posColumn.addAll(data.keySet());
 							break;
@@ -68,9 +67,13 @@ public class RestApiClientApp {
 					}
 					break;
 				case 2:
+					System.out.print("Masukkan path folder yang ingin diinput: ");
+					scanner.nextLine();
+					String path_folder = scanner.nextLine();
 					CSVToJsonConverter objek = new CSVToJsonConverter();
-					objek.Post();
+					objek.Post(path_folder);
 					break;
+
 				case 3:
 					for (String filename : fileNames) {
 						String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));

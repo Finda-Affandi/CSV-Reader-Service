@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVToJsonConverter {
-    public static void Post() {
-        String csvFolderPath = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\DATA\\Data-7\\";
+    public static void Post(String path) {
+        String csvFolderPath = path + "\\";
         List<String> csvFiles = listCsvFiles(csvFolderPath);
 
         String postgreSQLUrl = "http://localhost:8080/api/postgres";
