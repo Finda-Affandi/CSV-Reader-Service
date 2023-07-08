@@ -1,10 +1,15 @@
 package com.csvreader;
 
+import com.csvreader.converter.StringConverter;
+import com.csvreader.mapper.FilenameReader;
 import com.csvreader.mapper.PostMapping;
 import com.csvreader.restapiclient.RestApiClient;
 import com.csvreader.converter.CSVToJsonConverter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class RestApiClientApp {
@@ -24,13 +29,43 @@ public class RestApiClientApp {
 
 			switch (option) {
 				case 1:
-					RestApiClient getAllPostgres = new RestApiClient();
-					RestApiClient getAllCassandra = new RestApiClient();
-					String result1 = getAllPostgres.GetAll("http://localhost:8080/api/postgres");
+					RestApiClient getAll = new RestApiClient();
+					FilenameReader filenameReader = new FilenameReader();
+					String path = "src/main/resources/Mapping";
+					List<String> fileNames = filenameReader.fileNames(path);
 
-					String result2 = getAllCassandra.GetAll("http://localhost:8081/api/cassandra");
-					System.out.println(result1);
-					System.out.println(result2);
+					for (String filename : fileNames) {
+						String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
+						Map<String, Object> postgresResult = getAll.GetAll("http://localhost:8080/api/postgres", filenameWithoutExtension);
+						Map<String, Object> cassandraResult = getAll.GetAll("http://localhost:8081/api/cassandra", filenameWithoutExtension);
+
+						List<Map<String,Object>> postgresData = (List<Map<String, Object>>) postgresResult.get("data");
+//						Map<String, Object> cassandraData = (Map<String, Object>) cassandraResult.get("data");
+
+						List <String> posColumn = new ArrayList<>();
+
+//
+						for (Map<String, Object> data : postgresData) {
+							posColumn.addAll(data.keySet());
+							break;
+						}
+
+						System.out.println(String.join("\t", posColumn));
+
+						for (Map<String, Object> data : postgresData) {
+							for (String col : posColumn) {
+								System.out.print(data.get(col) + "\t");
+
+							}
+							System.out.print("\n");
+						}
+//						System.out.println(cassandraData);
+
+//						System.out.println(postgresResult.get("data"));
+//						System.out.println(cassandraResult.get("data"));
+
+
+					}
 					break;
 				case 2:
 					CSVToJsonConverter objek = new CSVToJsonConverter();

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 public class RestApiClient {
@@ -56,12 +58,13 @@ public class RestApiClient {
         }
     }
 
-    public String GetAll(String apiUrl) {
+    public Map<String, Object> GetAll(String apiUrl, String header) {
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type", "Application/json");
+            conn.setRequestProperty("table-name", header);
 
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -72,7 +75,12 @@ public class RestApiClient {
                     response.append(inputLine);
                 }
                 in.close();
-                return response.toString();
+
+                String jsonResponse = response.toString();
+                Gson gson = new Gson();
+                TypeToken<Map<String, Object>> typeToken = new TypeToken<Map<String, Object>>() {};
+                Map<String, Object> resultMap = gson.fromJson(jsonResponse, typeToken.getType());
+                return resultMap;
             } else {
                 System.out.println("Failed to get data. Response Code: " + responseCode);
             }
