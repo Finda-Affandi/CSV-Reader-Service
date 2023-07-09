@@ -105,7 +105,7 @@ public class RestApiClientApp {
 		System.out.print("""
 				Main Menu:
 				1. Get All Data
-				2. Post All Data 
+				2. Post All Data
 				3. Delete Data
 				4. Exit
 				\s""");
