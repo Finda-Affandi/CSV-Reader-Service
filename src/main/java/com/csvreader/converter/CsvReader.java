@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import com.csvreader.restapiclient.ResponseFormatter;
 import com.csvreader.restapiclient.RestApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,14 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CSVToJsonConverter {
+public class CsvReader {
     public static void Post(String path) {
         String csvFolderPath = path + "\\";
         List<String> csvFiles = listCsvFiles(csvFolderPath);
+        ResponseFormatter responseFormatter = new ResponseFormatter();
 
         String postgreSQLUrl = "http://localhost:8080/api/postgres";
         String cassandraUrl = "http://localhost:8081/api/cassandra";
         RestApiClient restApiClient = new RestApiClient();
+        int posTotTime = 0;
+        int posTotRow = 0;
+        int casTotTime = 0;
+        int casTotRow = 0;
 
         for (String csvFile : csvFiles) {
             String csvFilePath = csvFolderPath + csvFile;
@@ -31,17 +37,38 @@ public class CSVToJsonConverter {
             String header = getLimitedTitle(csvFile);
 
             try {
-                restApiClient.Post(postgreSQLUrl, header, body);
+                Map<String, Object> response = restApiClient.Post(postgreSQLUrl, header, body);
+                String result = responseFormatter.Formatter(response);
+                System.out.println(result + "\n");
+
+                posTotTime = posTotTime + Integer.parseInt((String) response.get("duration"));
+                posTotRow = posTotRow + Integer.parseInt((String) response.get("row"));
             } catch (Exception e) {
                 System.err.println("Error calling PostgreSQL endpoint: " + e.getMessage());
             }
 
             try {
-                restApiClient.Post(cassandraUrl, header, body);
+                Map<String, Object> response = restApiClient.Post(cassandraUrl, header, body);
+                String result = responseFormatter.Formatter(response);
+                System.out.println(result + "\n");
+
+                casTotTime = casTotTime + Integer.parseInt((String) response.get("duration"));
+                casTotRow = casTotRow + Integer.parseInt((String) response.get("row"));
             } catch (Exception e) {
                 System.err.println("Error calling Cassandra endpoint: " + e.getMessage());
             }
         }
+
+        System.out.println("== Conclusion ==");
+        System.out.println("Postgres : ");
+        System.out.println("Total File\t: " + csvFiles.size());
+        System.out.println("Total Row\t: " + posTotRow);
+        System.out.println("Total Time\t: " + posTotTime + " ms");
+        System.out.println("Casandra : ");
+        System.out.println("Total File\t: " + csvFiles.size());
+        System.out.println("Total Row\t: " + casTotRow);
+        System.out.println("Total Time\t: " + casTotTime + " ms");
+        System.out.println("\n\n");
     }
 
     public static List<String> listCsvFiles(String csvFolderPath) {

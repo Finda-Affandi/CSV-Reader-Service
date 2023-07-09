@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
 
-public class PostMapping {
+public class DBCreateTable {
     public void CreateTable() {
         MapReader mapReader = new MapReader();
         FilenameReader filenameReader = new FilenameReader();
@@ -22,8 +22,8 @@ public class PostMapping {
             Gson gson = new Gson();
             String json = gson.toJson(mapping);
             String filenameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
-            restApiClient.Post(endpointPostgres, filenameWithoutExtension, json.toString());
-            restApiClient.Post(endpointCassandra, filenameWithoutExtension, json.toString());
+            restApiClient.CreateTable(endpointPostgres, filenameWithoutExtension, json.toString());
+            restApiClient.CreateTable(endpointCassandra, filenameWithoutExtension, json.toString());
         }
 
     }
