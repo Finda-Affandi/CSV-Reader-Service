@@ -1,12 +1,16 @@
 package com.csvreader;
 
 
+import com.csvreader.csv.CsvLogWriter;
 import com.csvreader.mapper.FilenameReader;
 import com.csvreader.mapper.DBCreateTable;
 import com.csvreader.restapiclient.RestApiClient;
-import com.csvreader.converter.CsvReader;
+import com.csvreader.csv.CsvReader;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -45,36 +49,50 @@ public class RestApiClientApp {
 
 						List<Map<String,Object>> postgresData = (List<Map<String, Object>>) postgresResult.get("data");
 						String timeResponsePos = (String) postgresResult.get("time");
+						
 						List<Map<String,Object>> cassandraData = (List<Map<String, Object>>) cassandraResult.get("data");
 						String timeResponseCas = (String) cassandraResult.get("time");
 
 						System.out.println("POSTGRES");
 						System.out.println(filenameWithoutExtension + " Data :");
 						System.out.println(postgresData);
-						System.out.println("Time : " + timeResponsePos + " ms");
-						System.out.println("Row Total : " + postgresData.size());
+						System.out.println("Total Row \t\t\t\t: " + postgresData.size());
+						System.out.println("Response Time \t\t\t: " + timeResponsePos + " ms");
 						System.out.println("\n");
-						posTotTime = Integer.parseInt(posTotTime + timeResponsePos);
+						posTotTime = posTotTime + Integer.parseInt(timeResponsePos);
 						posTotRow = posTotRow + postgresData.size();
 
 						System.out.println("CASSANDRA");
 						System.out.println(filenameWithoutExtension + " Data :");
 						System.out.println(cassandraData);
-						System.out.println("Time : " + timeResponseCas + " ms");
-						System.out.println("Row Total : " + cassandraData.size());
+						System.out.println("Total Row \t\t\t\t: " + cassandraData.size());
+						System.out.println("Response Time \t\t\t: " + timeResponseCas + " ms");
 						System.out.println("\n");
-						casTotTime = Integer.parseInt(casTotTime + timeResponseCas);
+						casTotTime = casTotTime + Integer.parseInt(timeResponseCas);
 						casTotRow = casTotRow + cassandraData.size();
 					}
 
 					System.out.println("== Conclusion ==");
 					System.out.println("Postgres : ");
-					System.out.println("Total Row \t\t: " + posTotRow);
+					System.out.println("Total Row \t\t\t\t: " + posTotRow);
 					System.out.println("Total Response Time \t: " + posTotTime + " ms");
+					
 					System.out.println("Cassandra : ");
-					System.out.println("Total Row \t\t: " + casTotRow);
+					System.out.println("Total Row \t\t\t\t: " + casTotRow);
 					System.out.println("Total Response Time \t: " + casTotTime + " ms");
 					System.out.println("\n\n");
+
+					LocalDateTime currentDateTime = LocalDateTime.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+					String formattedDateTime = currentDateTime.format(formatter);
+
+					String[] logPos = {formattedDateTime, "Get", "Postgres", String.valueOf(posTotRow), String.valueOf(posTotTime) + " ms"};
+					String[] logCas = {formattedDateTime, "Get", "Cassandra", String.valueOf(casTotRow), String.valueOf(casTotTime) + " ms"};
+
+
+					CsvLogWriter csvLogWriter = new CsvLogWriter();
+					csvLogWriter.writer(logPos);
+					csvLogWriter.writer(logCas);
 					break;
 				case 2:
 					System.out.print("Masukkan path folder yang ingin diinput: ");

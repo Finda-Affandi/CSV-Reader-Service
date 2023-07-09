@@ -1,8 +1,10 @@
-package com.csvreader.converter;
+package com.csvreader.csv;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.csvreader.restapiclient.ResponseFormatter;
@@ -69,6 +71,19 @@ public class CsvReader {
         System.out.println("Total Row\t: " + casTotRow);
         System.out.println("Total Time\t: " + casTotTime + " ms");
         System.out.println("\n\n");
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+        System.out.println(formattedDateTime);
+
+        String[] logPos = {formattedDateTime, "Post", "Postgres", String.valueOf(posTotRow), String.valueOf(posTotTime) + " ms"};
+        String[] logCas = {formattedDateTime, "Post", "Cassandra", String.valueOf(casTotRow), String.valueOf(casTotTime) + " ms"};
+
+
+        CsvLogWriter csvLogWriter = new CsvLogWriter();
+        csvLogWriter.writer(logPos);
+        csvLogWriter.writer(logCas);
     }
 
     public static List<String> listCsvFiles(String csvFolderPath) {
