@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CsvLogWriter {
     public void writer(String[] data) {
-        String CSV_FILE_PATH = "D:\\Documents\\log.csv";
+        String CSV_FILE_PATH = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\LOG\\log.csv";
 
         try {
             FileWriter fileWriter = new FileWriter(CSV_FILE_PATH, true);
