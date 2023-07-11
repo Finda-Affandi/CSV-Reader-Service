@@ -10,10 +10,10 @@ import com.csvreader.csv.CsvReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 
 public class RestApiClientApp {
 
@@ -23,8 +23,6 @@ public class RestApiClientApp {
 		boolean exit = false;
 
 		while (!exit) {
-//			System.out.println("Waktu terbaru akses database:");
-			//total waktu
 			menu();
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("Input : ");
@@ -109,6 +107,12 @@ public class RestApiClientApp {
 					}
 					break;
 				case 4:
+					System.out.println("\n\n");
+					CsvReader csvReader = new CsvReader();
+					csvReader.logReader();
+					System.out.println("\n\n\n");
+					break;
+				case 5:
 					exit = true;
 					break;
 				default:
@@ -125,8 +129,8 @@ public class RestApiClientApp {
 				1. Get All Data
 				2. Post All Data
 				3. Delete Data
-				4. Exit
+				4. Time Record
+				5. Exit
 				\s""");
 	}
-
 }

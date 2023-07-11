@@ -39,26 +39,25 @@ public class CsvReader {
             String header = getLimitedTitle(csvFile);
 
             try {
+                Map<String, Object> response = restApiClient.Post(cassandraUrl, header, body);
+                String result = responseFormatter.Formatter(response);
+                System.out.println(result + "\n");
+                casTotTime = casTotTime + Integer.parseInt((String) response.get("duration"));
+                casTotRow = casTotRow + Integer.parseInt((String) response.get("row"));
+            } catch (Exception e) {
+                System.err.println("Error calling Cassandra endpoint: " + e.getMessage());
+            }
+
+            try {
                 Map<String, Object> response = restApiClient.Post(postgreSQLUrl, header, body);
                 String result = responseFormatter.Formatter(response);
                 System.out.println(result + "\n");
-
                 posTotTime = posTotTime + Integer.parseInt((String) response.get("duration"));
                 posTotRow = posTotRow + Integer.parseInt((String) response.get("row"));
             } catch (Exception e) {
                 System.err.println("Error calling PostgreSQL endpoint: " + e.getMessage());
             }
 
-            try {
-                Map<String, Object> response = restApiClient.Post(cassandraUrl, header, body);
-                String result = responseFormatter.Formatter(response);
-                System.out.println(result + "\n");
-
-                casTotTime = casTotTime + Integer.parseInt((String) response.get("duration"));
-                casTotRow = casTotRow + Integer.parseInt((String) response.get("row"));
-            } catch (Exception e) {
-                System.err.println("Error calling Cassandra endpoint: " + e.getMessage());
-            }
         }
 
         System.out.println("== Conclusion ==");
@@ -102,7 +101,7 @@ public class CsvReader {
         return csvFiles;
     }
 
-    private static List<String[]> readCsvFile(String csvFilePath) {
+    public static List<String[]> readCsvFile(String csvFilePath) {
         List<String[]> csvData = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
@@ -116,7 +115,7 @@ public class CsvReader {
         return csvData;
     }
 
-    private static List<Map<String, String>> convertToJSON(List<String[]> csvData) {
+    public static List<Map<String, String>> convertToJSON(List<String[]> csvData) {
         List<Map<String, String>> jsonData = new ArrayList<>();
         String[] headers = csvData.get(0);
         for (int i = 1; i < csvData.size(); i++) {
@@ -163,5 +162,64 @@ public class CsvReader {
     public static String getLimitedTitle(String filename) {
         // Mendapatkan nama file tanpa ekstensi
         return filename.substring(0, filename.lastIndexOf("_"));
+    }
+
+    public static List<String[]> readCSV(String filePath) {
+        List<String[]> data = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] row = line.split(",");
+                data.add(row);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return data;
+    }
+
+    public void logReader() {
+        String csvFile = "D:\\2. Kuliah\\3. Tahun 3\\3. Semester 9\\Pengujian Sistem\\LOG\\log.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            String[] headers = null;
+            String[][] data = new String[0][];
+
+            while ((line = br.readLine()) != null) {
+                String[] row = line.split(",");
+                if (headers == null) {
+                    headers = row;
+                    data = new String[0][headers.length];
+                } else {
+                    String[][] newData = new String[data.length + 1][headers.length];
+                    System.arraycopy(data, 0, newData, 0, data.length);
+                    newData[data.length] = row;
+                    data = newData;
+                }
+            }
+
+            printTable(headers, data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void printTable(String[] headers, String[][] data) {
+        // Print headers
+        for (String header : headers) {
+            System.out.print(String.format("\u001B[1m%-25s\u001B[0m", header));
+        }
+        System.out.println();
+
+        // Print data rows
+        for (String[] row : data) {
+            for (String cell : row) {
+                System.out.print(String.format("%-25s", cell));
+            }
+            System.out.println();
+        }
     }
 }
